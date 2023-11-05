@@ -12,7 +12,7 @@ public class main {
     try {
       // create reader object
       FileReader reader = new FileReader("test.properties");
-      // create properties objectd
+      // create properties object
       Properties p = new Properties();
       // add a wrapper around reader object
       p.load(reader);
@@ -125,19 +125,29 @@ public class main {
     int endFloor;
     int direction;
 
-    public Passenger(int startFloor, int endFloor) {
-      this.startFloor = startFloor;
-      this.endFloor = endFloor;
+    public Passenger() {
+      Passenger p = generatePassenger(v.getFloors(), v.getPassengers());
+      this.startFloor = 0;
+      this.endFloor = 0;
     }
 
     // function to add passenger to a floor
-    public void addPassenger(Passenger p, List<Passenger> floor) {
+    public void addPassenger(Passenger p, int startFloor) {
       floor.add(p);
     }
 
     // function to remove passenger from a floor
     public void removePassenger(Passenger p, List<Passenger> floor) {
       floor.remove(p);
+    }
+
+    // getters
+    public int getStartFloor() {
+      return startFloor;
+    }
+
+    public int getEndFloor() {
+      return endFloor;
     }
 
     // determining direction
@@ -154,23 +164,45 @@ public class main {
 
     private int floors;
     private double passengersProbability;
+    public Passenger p = new Passenger();
 
     // constructor
     public generatePassenger(int floors, double passengersProbability) {
+      // set floors and probability of passenger generation
       this.floors = floors;
       this.passengersProbability = passengersProbability;
+      // generate new passenger
+      p = generate(floors, passengersProbability);
+      // check if passenger was generated
+      if (p != null) {
+        // add the passenger to the start floor
+        p.addPassenger(p, p.getStartFloor());
+      }
     }
 
     // function to generate a passenger
-    public Passenger generate() {
+    public Passenger generate(int floors, double passengersProbability) {
+      // create random object
       Random rand = new Random();
-      int startFloor = rand.nextInt(floors) + 1;
-      int endFloor = rand.nextInt(floors) + 1;
-      // make sure startFloor and endFloor are not the same
-      while (startFloor == endFloor) {
-        endFloor = rand.nextInt(floors) + 1;
+      // loop through all floors
+      for (int currentFloor = 1; currentFloor <= floors; currentFloor++) {
+        // randomly generate a number between 0 and 1
+        double num = rand.nextDouble();
+        if (num < passengersProbability) {
+          // generate int as the floor
+          int endFloor = rand.nextInt(floors) + 1;
+          // make sure start and end floors are not the same
+          while (endFloor == currentFloor) {
+            endFloor = rand.nextInt(floors) + 1;
+          }
+          // set start and end floor and return
+          p.startFloor = currentFloor;
+          p.endFloor = endFloor;
+          return p;
+        }
       }
-      return new Passenger(startFloor, endFloor, 0);
+      // if no passenger was generated, return null
+      return null;
     }
   }
 
