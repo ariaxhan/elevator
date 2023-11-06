@@ -22,8 +22,7 @@ public class main {
       v.setPassengers(Double.parseDouble(p.getProperty("passengers")));
       v.setElevators(Integer.parseInt(p.getProperty("elevators")));
       v.setElevatorCapacity(
-        Integer.parseInt(p.getProperty("elevatorCapacity"))
-      );
+          Integer.parseInt(p.getProperty("elevatorCapacity")));
       v.setDuration(Integer.parseInt(p.getProperty("duration")));
 
       // close reader
@@ -45,17 +44,22 @@ public class main {
     for (int i = 0; i < v.getDuration(); i++) {
       // randomly generate a number between 1 and 3 to determine which of the following
       n = rand.nextInt(3) + 1;
-      // Elevator unload & load: An elevator may stop at a floor and unload all passengers in the elevator
-      // bound for that floor. Additionally, during the same “tick”, any passengers on the floor waiting for
-      // an elevator going in the desired direction (up or down). You may assume that passengers never
-      // enter an elevator going in the wrong direction.
-      // Elevator travel: An elevator may travel between no more than 5 floors (eg. from the 8th floor to
-      // the 13th floor).
-      //every multiple passengers
-      // use queue, up and down
-
-      // New passengers: Given “passengers” — the probabilities in the property file — a new passenger
-      // may appear on a floor and request transportation to another floor
+      if (n == 1) {
+        // Elevator unload & load: An elevator may stop at a floor and unload all passengers in the elevator
+        // bound for that floor. Additionally, during the same “tick”, any passengers on the floor waiting for
+        // an elevator going in the desired direction (up or down). You may assume that passengers never
+        // enter an elevator going in the wrong direction.
+      } else if (n == 2) {
+        // Elevator travel: An elevator may travel between no more than 5 floors (eg. from the 8th floor to
+        // the 13th floor).
+        //every multiple passengers
+        // use queue, up and down
+      } else if (n == 3) {
+        // New passengers: Given “passengers” — the probabilities in the property file — a new passenger
+        // may appear on a floor and request transportation to another floor
+      } else {
+        System.out.println("Error: invalid number generated");
+      }
     }
   }
 
@@ -69,21 +73,23 @@ public class main {
   // list interface to implement linkedlist and arraylist
   // queue interface to implement linkedqueue and arrayqueue
 
-  private class Elevator {
+  // notes:
+  // 1. use a heap to store the floors of each elevator
+  // 2. use a queue within each floor to store passengers
+  // 3. generate elevator and run simulation in main
 
-    private int currentFloor = 0;
-    private int direction = 1; // 1 for up, -1 for down
-    private int capacity = 0;
-    private List<Passenger> passengers;
-    private String structureType;
+  private class Floor {
+    public int floor = 0;
+    public List<Passenger> passengers;
+    public variables v;
 
     // constructor
-    public Elevator(int capacity, String structureType) {
-      this.capacity = capacity;
-      this.structureType = structureType;
-      if (structureType.equals("linked")) {
+    public Floor(int floor, variables v) {
+      this.floor = floor;
+      this.v = v;
+      if (v.getStructures().equals("linked")) {
         passengers = new LinkedList<Passenger>();
-      } else if (structureType.equals("array")) {
+      } else if (v.getStructures().equals("array")) {
         passengers = new ArrayList<Passenger>();
       }
     }
@@ -98,26 +104,80 @@ public class main {
       passengers.remove(p);
     }
 
+    public void getPassengers() {
+      
+    }
+  }
+
+  private class Elevator {
+
+    public int currentFloor = 0;
+    public int direction = 1; // 1 for up, -1 for down
+    public int capacity = 0;
+    public List<Floor> floors;
+    private String structureType;
+    public variables v;
+
+    // constructor
+    public Elevator(int capacity, String structureType, variables v) {
+      this.capacity = capacity;
+      this.structureType = structureType;
+      this.v = v;
+      // create list of floors based on type
+      if (structureType.equals("linked")) {
+        this.floors = new LinkedList<Floor>();
+      } else if (structureType.equals("array")) {
+        this.floors = new ArrayList<Floor>();
+      }
+      // add the floors 
+      for (int i = 0; i < v.getFloors(); i++) {
+        floors.add(new Floor(i, v));
+      }
+    }
+
+    // get passengers on a given floor
+    public void getPassengers(int floor) {
+      floors.get(floor);
+    }
+
     // function to Elevator unload & load: An elevator may stop at a floor and unload all passengers in the elevator
     // bound for that floor. Additionally, during the same “tick”, any passengers on the floor waiting for
     // an elevator going in the desired direction (up or down). You may assume that passengers never
     // enter an elevator going in the wrong direction.
     public void load() {
-      // check if elevator is full
-      if (passengers.size() == capacity) {
-        return;
-      } else {
-        // otherwise, check direction
-        if (direction == 1) {
-          // check if there are passengers on the floor going up
-
+      // generate random floor to go to
+      Random rand = new Random();
+      int floor = rand.nextInt(v.getFloors()) + 1;
+      // make sure floor is not the same as current floor
+      while (floor == currentFloor) {
+        floor = rand.nextInt(v.getFloors()) + 1;
+      }
+      // check direction
+      this.direction = getDirection(currentFloor, floor);
+      int floorstraveled = Math.abs(floor - currentFloor);
+      if (direction == 1) {
+        // check if there are passengers on the floor going up
+        for (int i = 0; i < floorstraveled; i++) {
+          currentFloor = floor + i;
+          floors.getPassengers(currentFloor);
         }
+      } else if (direction == -1) {
+        // check if there are passengers on the floor going down
       }
     }
-    // Elevator travel: An elevator may travel between no more than 5 floors (eg. from the 8th floor to
-    // the 13th floor).
-    //every multiple passengers
+  
+
+  // Elevator travel: An elevator may travel between no more than 5 floors (eg. from the 8th floor to
+  // the 13th floor).
+  public void travel() {
+    // check direction
+    if (direction == 1) {
+      // check if there are passengers on the floor going up
+    } else if (direction == -1) {
+      // check if there are passengers on the floor going down
+    }
   }
+}
 
   private class Passenger {
 
@@ -132,7 +192,7 @@ public class main {
     }
 
     // function to add passenger to a floor
-    public void addPassenger(Passenger p, int startFloor) {
+    public void addPassenger(Passenger p, List<Passenger> floor) {
       floor.add(p);
     }
 
@@ -149,14 +209,18 @@ public class main {
     public int getEndFloor() {
       return endFloor;
     }
+  }
 
-    // determining direction
-    public int getDirection(int startFloor, int endFloor) {
-      if (startFloor < endFloor) {
-        return 1;
-      } else {
-        return -1;
-      }
+  // determining direction
+  public int getDirection(int startFloor, int endFloor) {
+    // going up
+    if (startFloor < endFloor) {
+      return 1;
+      // going down
+    } else if (startFloor > endFloor) {
+      return -1;
+    } else {
+      return 0;
     }
   }
 
