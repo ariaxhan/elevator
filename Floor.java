@@ -1,55 +1,80 @@
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 
 public class Floor {
 
   public int floor = 0;
-  public Queue<Passenger> upPassengers;
-  public Queue<Passenger> downPassengers;
+  // queue of passengers going up
+  public Queue<Passenger> goingup;
+  // queue of passengers going down
+  public Queue<Passenger> goingdown;
   public variables v;
-  public Elevator elevator;
 
   // constructor
   public Floor(int floor, variables v) {
-    // set number of floor
-    this.floor = floor;
     // set variables
     this.v = v;
-    // create queues of passengers
-    this.upPassengers = new LinkedList<Passenger>();
-    this.downPassengers = new LinkedList<Passenger>();
+    // set number of floor
+    this.floor = floor;
+    // create queues
+    this.goingup = new LinkedList<>();
+    this.goingdown = new LinkedList<>();
   }
 
-  public void checkFloor(int currentFloor, Elevator elevator) {
-    for (int i = 0; i < passengerList.size(); i++) {
-      // if the passenger is going in the same direction as the elevator
-      Passenger passenger = passengerList.get(i);
-      int destination = passenger.getdestinationFloor();
+  // // check for and remove passengers going to the current floor
+  // public void checkFloor(int currentFloor, Elevator elevator) {
+  //   // loop through passenger list
+  //   for (int i = 0; i < passengerList.size(); i++) {
+  //     // get the passenger and its destination
+  //     Passenger passenger = passengerList.get(i);
+  //     int destination = passenger.getdestinationFloor();
+  //     // if the passenger is going to the current floor
+  //     if (destination == currentFloor) {
+  //       // remove the passenger from the elevator
+  //       this.passengerList.remove(passenger);
+  //     }
+  //   }
+  // }
 
-      if (destination > currentFloor) {
-        // add the passenger to the elevator
-        this.upPassengers.add(passenger);
-      }
-      // if the passenger is going to the current floor
-      else if (destination == currentFloor) {
-        // remove the passenger from the elevator
-        this.downPassengers.remove(passenger);
-      }
+  // method to add passenger to floor given direction
+  public void addPassenger(Passenger p, int direction) {
+    if (direction == 1) {
+      this.goingup.add(p);
+    } else if (direction == -1) {
+      this.goingdown.add(p);
     }
   }
 
-  // method to add passenger to floor
-  public void addPassenger(Passenger p, Elevator e) {
-    passengerList.add(p);
+  // method to remove passenger from floor given direction
+  public void removePassenger(Passenger p, int direction) {
+    if (direction == 1) {
+      this.goingup.remove(p);
+    } else if (direction == -1) {
+      this.goingdown.remove(p);
+    }
   }
 
-  // method to remove passenger from floor
-  public void removePassenger(Passenger p, Elevator e) {
-    passengerList.remove(p);
+  // method to get passenger queue
+  public Queue<Passenger> getPassengerList(int direction) {
+    if (direction == 1) {
+      return this.goingup;
+    } else if (direction == -1) {
+      return this.goingdown;
+    } else {
+      return null;
+    }
   }
 
-  // method to get list of passengers on floor
-  public Queue<Passenger> getPassengers() {
-    return passengerList;
+  // method to get next passenger in the queue
+  public Passenger getNextPassenger(int direction) {
+    if (direction == 1) {
+      return this.goingup.peek();
+    } else if (direction == -1) {
+      return this.goingdown.peek();
+    } else {
+      return null;
+    }
   }
 }

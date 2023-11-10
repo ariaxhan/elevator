@@ -1,52 +1,74 @@
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.PriorityQueue;
 
 public class Elevator {
 
   public int currentFloor = 0;
-  public int direction = 0; // 1 for up, -1 for down, 0 for not moving
   public int capacity = 0;
-  public List<Floor> floors;
   public variables v;
-  // heap to store destination floors of passengers going down
-  PriorityQueue<Passenger> down;
-  // heap to store destination floors of passengers going up
-  PriorityQueue<Passenger> up;
+  // list of all passengers in the elevator
+  public List<Passenger> passengers;
+  int goingUp = 0;
 
   // constructor
   public Elevator(variables v) {
+    // set variables
     this.v = v;
+    // set capacity
     this.capacity = v.getElevatorCapacity();
+    // set type of list for passengers
     if (v.getStructures().equals("linked")) {
-      this.floors = new LinkedList<>();
+      this.passengers = new LinkedList<>();
     } else if (v.getStructures().equals("array")) {
-      this.floors = new ArrayList<>(v.floors);
+      this.passengers = new ArrayList<>();
     }
-
-    // Initialize each floor of the building
-    for (int j = 0; j < v.floors; j++) {
-      Floor floor = new Floor(j, v);
-      floors.add(floor); // Create a new list for each floor
-    }
+    // set current floor
+    this.currentFloor = 0;
+    // set direction
+    this.goingUp = 0;
   }
 
-  // get floor based on index
-  public Floor getFloor(int index) {
-    return floors.get(index);
+  // method to add passenger to elevator
+  public void addPassenger(Passenger p) {
+    this.passengers.add(p);
+    this.capacity += 1;
   }
 
-  // heaps for destination floors of passengers
+  // method to remove a passenger from the elevator
+  public void removePassenger(Passenger p) {
+    this.passengers.remove(p);
+    this.capacity -= 1;
+  }
 
-  // function to get direction
-  public int getDirection(int currentFloor, int destinationFloor) {
+  // method to get passenger list
+  public List<Passenger> getPassengerList() {
+    return this.passengers;
+  }
+
+  // method to get currentFloor of elevator
+  public int getCurrentFloor() {
+    return this.currentFloor;
+  }
+
+  // method to set currentFloor of the elevator
+  public void setCurrentFloor(int currentFloor) {
+    this.currentFloor = currentFloor;
+  }
+
+  // method to get direction
+  public int getDirection() {
+    return this.goingUp;
+  }
+
+  // function to set direction
+  public void setDirection(int currentFloor, int destinationFloor) {
     if (destinationFloor > currentFloor) {
-      return 1;
+      this.goingUp = 1; // going up
     } else if (destinationFloor < currentFloor) {
-      return -1;
+      this.goingUp = 2; // going down
     } else {
-      return 0;
+      this.goingUp = 0;
     }
   }
 }
