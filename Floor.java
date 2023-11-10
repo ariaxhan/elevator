@@ -4,8 +4,8 @@ import java.util.Queue;
 public class Floor {
 
   public int floor = 0;
-  public Queue<Passenger> upPassengers; // each floor is assigned a list of passengers
-  public Queue<Passenger> downPassengers; // each floor is assigned a list of passengers
+  public Queue<Passenger> upPassengers;
+  public Queue<Passenger> downPassengers;
   public variables v;
   public Elevator elevator;
 
@@ -15,8 +15,9 @@ public class Floor {
     this.floor = floor;
     // set variables
     this.v = v;
-    // create queue of passengers
-    this.passengerList = new LinkedList<Passenger>();
+    // create queues of passengers
+    this.upPassengers = new LinkedList<Passenger>();
+    this.downPassengers = new LinkedList<Passenger>();
   }
 
   public void checkFloor(int currentFloor, Elevator elevator) {
@@ -27,12 +28,12 @@ public class Floor {
 
       if (destination > currentFloor) {
         // add the passenger to the elevator
-        passengerList.add(passenger);
+        this.upPassengers.add(passenger);
       }
       // if the passenger is going to the current floor
       else if (destination == currentFloor) {
         // remove the passenger from the elevator
-        passengerList.remove(passenger);
+        this.downPassengers.remove(passenger);
       }
     }
   }

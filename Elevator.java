@@ -10,9 +10,9 @@ public class Elevator {
   public int capacity = 0;
   public List<Floor> floors;
   public variables v;
-  // heap to store passengers going down
+  // heap to store destination floors of passengers going down
   PriorityQueue<Passenger> down;
-  // heap to store passengers going up
+  // heap to store destination floors of passengers going up
   PriorityQueue<Passenger> up;
 
   // constructor

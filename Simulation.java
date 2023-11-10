@@ -6,7 +6,7 @@ public class Simulation {
 
   // variables
   private variables v;
-  private Elevator elevator;
+  private static Elevator elevator;
 
   // constructor
   public Simulation(variables v, Elevator elevator) {
@@ -18,38 +18,37 @@ public class Simulation {
     Random rand = new Random();
     int n;
     // function to run simulation
-    // during each "tick" in the duration variable, one of the following may occur
+    // during each "tick" in the duration variable
     for (int i = 0; i < v.getDuration(); i++) {
-      // randomly generate a number between 1 and 3 to determine which of the following
-      n = rand.nextInt(3) + 1;
-      if (n == 1) {
-        // Elevator unload & load: An elevator may stop at a floor and unload all passengers in the elevator
-        // bound for that floor. Additionally, during the same “tick”, any passengers on the floor waiting for
-        // an elevator going in the desired direction (up or down). You may assume that passengers never
-        // enter an elevator going in the wrong direction.
-      } else if (n == 2) {
-        // Elevator travel: An elevator may travel between no more than 5 floors (eg. from the 8th floor to
-        // the 13th floor).
-        //every multiple passengers
-        // use queue, up and down
-      } else if (n == 3) {
-        // New passengers: Given “passengers” — the probabilities in the property file — a new passenger
-        // may appear on a floor and request transportation to another floor
-        // generate a passenger for each floor
-        // for each floor
-        for (int j = 0; j < v.getFloors(); j++) {
-          // generate a passenger
-          Passenger p = new Passenger(); // creating a Passenger instance
-          // check if passenger was generated
-          if (p.startFloor == 0 || p.destinationFloor == 0) {
-            // if no passenger was generated, do nothing
-          } else {
-            // add the passenger to the floor's queue
-            addPassenger(elevator.getFloor(j), elevator); // Correctly adding to the list
+      // Elevator unload & load: An elevator may stop at a floor and unload all passengers in the elevator
+      // bound for that floor. Additionally, during the same “tick”, any passengers on the floor waiting for
+      // an elevator going in the desired direction (up or down). You may assume that passengers never
+      // enter an elevator going in the wrong direction.
+      // Elevator travel: An elevator may travel between no more than 5 floors (eg. from the 8th floor to
+      // the 13th floor).
+      //every multiple passengers
+      // use queue, up and down
+      // New passengers: Given “passengers” — the probabilities in the property file — a new passenger
+      // may appear on a floor and request transportation to another floor
+      // generate a passenger for each floor
+      // for each floor
+      // new passenger appears on a floor and requests transportation to another floor
+      for (int j = 0; j < v.getFloors(); j++) {
+        // generate a passenger
+        Passenger p = new Passenger(); // creating a Passenger instance
+        // check if passenger was generated
+        if (p.startFloor == 0 || p.destinationFloor == 0) {
+          // if no passenger was generated, do nothing
+        } else {
+          // add the passenger to the floor's queue
+          if (p.destinationFloor > p.startFloor) {
+            // add the passenger to the up queue
+            elevator.getFloor(j).upPassengers.add(p);
+          } else if (p.destinationFloor < p.startFloor) {
+            // add the passenger to the down queue
+            elevator.getFloor(j).downPassengers.add(p);
           }
         }
-      } else {
-        System.out.println("Error: invalid number generated");
       }
     }
   }
