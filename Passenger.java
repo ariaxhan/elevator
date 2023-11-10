@@ -2,8 +2,8 @@ import java.util.Random;
 
 public class Passenger {
 
-  private int startFloor;
-  private int destinationFloor;
+  public int startFloor;
+  public int destinationFloor;
 
   public Passenger(variables v) {
     generate(v);
@@ -46,5 +46,4 @@ public class Passenger {
   public int getdestinationFloor() {
     return destinationFloor;
   }
-
 }

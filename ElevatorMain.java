@@ -1,7 +1,7 @@
 import java.io.FileReader;
 import java.util.Properties;
 
-public class ElevatorMain<Simulation> {
+public class ElevatorMain {
 
   public static void main(String[] args) {
     // create variables object

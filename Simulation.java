@@ -2,7 +2,7 @@ import java.util.Collections;
 import java.util.PriorityQueue;
 import java.util.Random;
 
-public class Simulation<Elevator> {
+public class Simulation {
 
   // variables
   private variables v;
@@ -35,6 +35,19 @@ public class Simulation<Elevator> {
       } else if (n == 3) {
         // New passengers: Given “passengers” — the probabilities in the property file — a new passenger
         // may appear on a floor and request transportation to another floor
+        // generate a passenger for each floor
+        // for each floor
+        for (int j = 0; j < v.getFloors(); j++) {
+          // generate a passenger
+          Passenger p = new Passenger(); // creating a Passenger instance
+          // check if passenger was generated
+          if (p.startFloor == 0 || p.destinationFloor == 0) {
+            // if no passenger was generated, do nothing
+          } else {
+            // add the passenger to the floor's queue
+            addPassenger(elevator.getFloor(j), elevator); // Correctly adding to the list
+          }
+        }
       } else {
         System.out.println("Error: invalid number generated");
       }
@@ -53,6 +66,7 @@ public class Simulation<Elevator> {
   // bound for that floor. Additionally, during the same “tick”, any passengers on the floor waiting for
   // an elevator going in the desired direction (up or down). You may assume that passengers never
   // enter an elevator going in the wrong direction.
+
   public void load(int currentFloor) {
     // generate random floor to go to
     Random rand = new Random();

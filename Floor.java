@@ -1,67 +1,54 @@
-import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.List;
+import java.util.Queue;
 
-public class Floor<Passenger> {
+public class Floor {
 
   public int floor = 0;
-  public List<Passenger> passengers; // each floor is assigned a list of passengers
+  public Queue<Passenger> upPassengers; // each floor is assigned a list of passengers
+  public Queue<Passenger> downPassengers; // each floor is assigned a list of passengers
   public variables v;
+  public Elevator elevator;
 
   // constructor
   public Floor(int floor, variables v) {
+    // set number of floor
     this.floor = floor;
+    // set variables
     this.v = v;
-    if (v.getStructures().equals("linked")) {
-      this.passengers = new LinkedList<Passenger>();
-    } else if (v.getStructures().equals("array")) {
-      this.passengers = new ArrayList<Passenger>();
-    }
+    // create queue of passengers
+    this.passengerList = new LinkedList<Passenger>();
   }
 
-	public void checkFloor(int currentFloor) {
-		for (int i = 0; i < passengers.size(); i++) {
-			// if the passenger is going in the same direction as the elevator
-      Passenger passenger = passengers.get(i);
-      int destination = getdestinationFloor();
-			if (destination > currentFloor) {
-				// add the passenger to the elevator
-						passengers.add(passengers.get(i));
-						// remove the passenger from the floor
-						passengers.remove(passengers.get(i));
-					}
-				}
-				// if there are passengers in the elevator that are going to the current floor, remove them
-				for (int i = 0; i < passengers.size(); i++) {
-					// if the passenger is going to the current floor
-					if (passengers.get(i).getEndFloor() == currentFloor) {
-						// remove the passenger from the elevator
-						passengers.remove(passengers.get(i));
-					}
-				}
-			}
-		private int getdestinationFloor() {
-    return 0;
-  }
+  public void checkFloor(int currentFloor, Elevator elevator) {
+    for (int i = 0; i < passengerList.size(); i++) {
+      // if the passenger is going in the same direction as the elevator
+      Passenger passenger = passengerList.get(i);
+      int destination = passenger.getdestinationFloor();
+
+      if (destination > currentFloor) {
+        // add the passenger to the elevator
+        passengerList.add(passenger);
+      }
+      // if the passenger is going to the current floor
+      else if (destination == currentFloor) {
+        // remove the passenger from the elevator
+        passengerList.remove(passenger);
+      }
     }
+  }
 
   // method to add passenger to floor
-  public void addPassenger(Passenger p) {
-    passengers.add(p);
+  public void addPassenger(Passenger p, Elevator e) {
+    passengerList.add(p);
   }
 
   // method to remove passenger from floor
-  public void removePassenger(Passenger p) {
-    passengers.remove(p);
-  }
-
-  // method to set list of passengers on floor
-  public void setPassengers(List<Passenger> passengers) {
-    this.passengers = passengers;
+  public void removePassenger(Passenger p, Elevator e) {
+    passengerList.remove(p);
   }
 
   // method to get list of passengers on floor
-  public List<Passenger> getPassengers() {
-    return passengers;
+  public Queue<Passenger> getPassengers() {
+    return passengerList;
   }
 }
