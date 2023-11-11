@@ -41,17 +41,25 @@ public class Passenger {
     Random rand = new Random();
     // randomly generate a number between 0 and 1
     // run probability
-    double probability = rand.nextDouble(0, 1);
+    double probability = rand.nextDouble(0, 100);
     // if the random number is less than the probability of a passenger being generated
     // generate a passenger
-    if (probability <= v.passengers) {
-      System.out.println("random number: " + rand.nextDouble(0, 1));
-      // generate int as the floor
-      this.startFloor = rand.nextInt(1, v.floors);
+    double currProbability = v.passengers * 100;
+    System.out.println(currProbability + "  " + probability);
+    if (probability <= currProbability) {
+      System.out.println("random number: " + probability);
+      // generate int as the start floor
+      int startFloor = rand.nextInt(1, v.floors);
+      // generate int as the destination floor
+      int destinationFloor = rand.nextInt(1, v.floors);
       // make sure start and end floors are not the same
-      while (this.destinationFloor == this.startFloor) {
-        this.destinationFloor = rand.nextInt(1, v.floors) + 1;
+      while (startFloor == destinationFloor) {
+        destinationFloor = rand.nextInt(1, v.floors);
       }
+      // set start floor
+      this.startFloor = startFloor;
+      // set destination floor
+      this.destinationFloor = destinationFloor;
       // set direction
       setPDirection(startFloor, destinationFloor);
     } else {

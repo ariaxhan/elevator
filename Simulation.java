@@ -44,7 +44,7 @@ public class Simulation {
         // check if passenger was generated
         if (p.startFloor == 0 || p.destinationFloor == 0) {
           // if no passenger was generated, go to next iteration in the loop
-          continue;
+          j++;
         } else {
           // initialize passenger time
           p.startTime = time.getTime();
@@ -59,15 +59,16 @@ public class Simulation {
             System.out.println("Passenger added to floor: " + p.startFloor);
           }
         }
-      }
-      if (j % 2 == 0) {
-        // load
-        load(currentElevator, building, currentElevator.getCurrentFloor());
-        // unload
-        unload(currentElevator, building, currentElevator.getCurrentFloor());
-      } else {
-        // travel
-        travel(currentElevator, currentElevator.getCurrentFloor());
+
+        if (j % 2 == 0) {
+          // load
+          load(currentElevator, building, currentElevator.getCurrentFloor());
+          // unload
+          unload(currentElevator, building, currentElevator.getCurrentFloor());
+        } else {
+          // travel
+          travel(currentElevator, currentElevator.getCurrentFloor());
+        }
       }
     }
   }
@@ -78,6 +79,7 @@ public class Simulation {
   // enter an elevator going in the wrong direction.
 
   public void load(Elevator e, Building b, int currentFloor) {
+    System.out.println("Load started");
     // add any passengers going up or down to the elevator based on direction of elevator
     // get direction of elevator
     int direction = e.getDirection();
@@ -113,6 +115,10 @@ public class Simulation {
   public void unload(Elevator e, Building b, int currentFloor) {
     // get all passengers in the elevator
     List<Passenger> pInElevator = e.getPassengerList();
+    System.out.println(
+      "Unload started with " + pInElevator.size() + " passengers"
+    );
+
     // loop through passengers in the elevator
     for (int r = 0; r < pInElevator.size(); r++) {
       // if the passenger's destinationFloor is the current floor
@@ -129,6 +135,10 @@ public class Simulation {
         time.recordJourneyTime(currentPassenger.getStartTime(), endTime);
       }
     }
+
+    System.out.println(
+      "Unload ended with " + pInElevator.size() + " passengers"
+    );
   }
 
   // move elevator
@@ -139,19 +149,14 @@ public class Simulation {
     Random rand = new Random();
     int maxFloor = currentFloor + 5;
     int minFloor = currentFloor - 5;
+    if (minFloor < 1) {
+      minFloor = 1;
+    }
     int floor = rand.nextInt(minFloor, maxFloor);
     // make sure floor is not the same as current floor
     while (floor == currentFloor) {
       floor = rand.nextInt(v.getFloors()) + 1;
     }
-    // check if the elevator traveled more than 5 floors
-    int floorstraveled = Math.abs(floor - currentFloor);
-    while (floorstraveled > 5) {
-      floor = rand.nextInt(v.getFloors()) + 1;
-    }
-    // update floors traveled
-    floorstraveled = Math.abs(floor - currentFloor);
-
     // print movement
     System.out.println(
       "Elevator moved: from floor: " + currentFloor + " to floor: " + floor

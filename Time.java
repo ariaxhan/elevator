@@ -24,53 +24,57 @@ public class Time {
   public void onTick() {
     // Increment the tick count
     tickCount++;
-	// record journey times of all passengers
+    // record journey times of all passengers
 
   }
 
   // Records the journey time of a passenger
-	public void recordJourneyTime(long startTime, long endTime) {
-		long journeyTime = endTime - startTime;
-		journeyTimes.add(journeyTime);
-		totalJourneyTime += journeyTime;
+  public void recordJourneyTime(long startTime, long endTime) {
+    long journeyTime = endTime - startTime;
+    System.out.println("Journey time: " + journeyTime);
+    journeyTimes.add(journeyTime);
+    totalJourneyTime += journeyTime;
 
-		if (journeyTime > longestJourneyTime) {
-			longestJourneyTime = journeyTime;
-		}
-		if (journeyTime < shortestJourneyTime) {
-			shortestJourneyTime = journeyTime;
-		}
-	}
-
+    if (journeyTime > longestJourneyTime) {
+      this.longestJourneyTime = journeyTime;
+    }
+    if (journeyTime < shortestJourneyTime) {
+      this.shortestJourneyTime = journeyTime;
+    }
+  }
 
   // Calculates and returns the average journey time
   public double getAverageJourneyTime() {
-    return journeyTimes.isEmpty()
+    return this.journeyTimes.isEmpty()
       ? 0
-      : (double) totalJourneyTime / journeyTimes.size();
+      : (double) this.totalJourneyTime / journeyTimes.size();
   }
 
   // Returns the longest journey time
   public long getLongestJourneyTime() {
-    return longestJourneyTime == Long.MIN_VALUE ? 0 : longestJourneyTime;
+    return this.longestJourneyTime == Long.MIN_VALUE
+      ? 0
+      : this.longestJourneyTime;
   }
 
   // Returns the shortest journey time
   public long getShortestJourneyTime() {
-    return shortestJourneyTime == Long.MAX_VALUE ? 0 : shortestJourneyTime;
+    return this.shortestJourneyTime == Long.MAX_VALUE
+      ? 0
+      : this.shortestJourneyTime;
   }
 
   // Getter for tickCount
-	public long getTickCount() {
-		return tickCount;
-	}
-  
-	public long getTime() {
-		// get current time in milliseconds
-		long time = System.currentTimeMillis();
-		return time;
-	}
-  
+  public long getTickCount() {
+    return tickCount;
+  }
+
+  public long getTime() {
+    // get current time in milliseconds
+    long time = System.currentTimeMillis();
+    return time;
+  }
+
   // function to print times
   public void print() {
     // print average journey time
