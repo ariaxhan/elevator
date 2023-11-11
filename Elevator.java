@@ -11,6 +11,8 @@ public class Elevator {
   public List<Passenger> passengers;
   int goingUp = 0;
 
+  public int id = 0;
+
   // constructor
   public Elevator(variables v) {
     // set variables
@@ -24,9 +26,11 @@ public class Elevator {
       this.passengers = new ArrayList<>();
     }
     // set current floor
-    this.currentFloor = 0;
+    this.currentFloor = 1;
     // set direction
-    this.goingUp = 0;
+    this.goingUp = 1;
+    // set id
+    this.id = 0;
   }
 
   // method to add passenger to elevator

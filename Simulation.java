@@ -7,32 +7,35 @@ public class Simulation {
   // variables
   private variables v;
   public Building building;
+  public Time time;
 
   // constructor
   public Simulation(variables v, Building building) {
     this.v = v;
-    this.building = new Building(v);
+    this.building = building;
+    this.time = new Time(v);
   }
 
+  // function to run the simulation based on ticks
   public void runSimulation(variables v) {
+    // set up simulation to run once per tick
+    for (long i = 0; i < v.getDuration(); i++) {
+      // run simulation
+      simulation(v);
+    }
+  }
+
+  public void simulation(variables v) {
     // during each "tick" in the duration variable
     // operations on elevators
-    for (int i = 0; i < v.getDuration(); i++) {
-      // loop through list of elevators in the building
-      for (int j = 0; j < v.getElevators(); j++) {
-        Elevator currentElevator = building.getElevators(j);
-        // run load/unload and travel functions for each elevator,
-        // alternating between the two functions every tick
-        if (i % 2 == 0) {
-          // load
-          load(currentElevator, building, currentElevator.getCurrentFloor());
-          // unload
-          unload(currentElevator, building, currentElevator.getCurrentFloor());
-        } else {
-          // travel
-          travel(currentElevator, currentElevator.getCurrentFloor());
-        }
-      }
+    System.out.println("Simulation started");
+
+    // loop through list of elevators in the building
+    for (int j = 0; j < v.getElevators(); j++) {
+      Elevator currentElevator = building.getElevators(j);
+      // run load/unload and travel functions for each elevator,
+      // alternating between the two functions every tick
+      System.out.println("Elevator: " + j);
       // operations on floors
       // loop through list of floors in the building
       for (int y = 0; y < v.getFloors(); y++) {
@@ -40,15 +43,31 @@ public class Simulation {
         Passenger p = new Passenger(v); // creating a Passenger instance
         // check if passenger was generated
         if (p.startFloor == 0 || p.destinationFloor == 0) {
-          // if no passenger was generated, do nothing
+          // if no passenger was generated, go to next iteration in the loop
+          continue;
         } else {
+          // initialize passenger time
+          p.startTime = time.getTime();
           // add the passenger to the floor's queue based on direction
           if (p.startFloor < p.destinationFloor) {
             building.getFloor(p.startFloor).goingup.add(p);
+            // passenger added to floor queue for going up
+            System.out.println("Passenger added to floor: " + p.startFloor);
           } else if (p.startFloor > p.destinationFloor) {
             building.getFloor(p.startFloor).goingdown.add(p);
+            // passenger added to floor queue for going down
+            System.out.println("Passenger added to floor: " + p.startFloor);
           }
         }
+      }
+      if (j % 2 == 0) {
+        // load
+        load(currentElevator, building, currentElevator.getCurrentFloor());
+        // unload
+        unload(currentElevator, building, currentElevator.getCurrentFloor());
+      } else {
+        // travel
+        travel(currentElevator, currentElevator.getCurrentFloor());
       }
     }
   }
@@ -58,7 +77,7 @@ public class Simulation {
   // an elevator going in the desired direction (up or down). You may assume that passengers never
   // enter an elevator going in the wrong direction.
 
-  public void load(Elevator e, Building b, int currentFloor) throws Exception {
+  public void load(Elevator e, Building b, int currentFloor) {
     // add any passengers going up or down to the elevator based on direction of elevator
     // get direction of elevator
     int direction = e.getDirection();
@@ -66,6 +85,9 @@ public class Simulation {
     Floor floor = b.getFloor(currentFloor);
     // get passenger list for that floor
     Queue<Passenger> pOnFloor = floor.getPassengerList(direction);
+    if (pOnFloor == null) {
+      return;
+    }
     // loop through passengers on the floor
     for (int i = 0; i < pOnFloor.size(); i++) {
       // get next passenger from queue
@@ -73,13 +95,17 @@ public class Simulation {
       // check if elevator is full
       if (e.capacity == v.getElevatorCapacity()) {
         // if elevator is full, break out of loop
-        break;
+        return;
       } else {
         // if elevator is not full, remove passenger from floor
         floor.removePassenger(p, direction);
       }
       // add passenger to elevator
       e.addPassenger(p);
+      // print passenger
+      System.out.println(
+        "Passenger added to elevator: on floor: " + currentFloor
+      );
     }
   }
 
@@ -91,8 +117,16 @@ public class Simulation {
     for (int r = 0; r < pInElevator.size(); r++) {
       // if the passenger's destinationFloor is the current floor
       // remove the passenger from the elevator
-      if (pInElevator.get(r).destinationFloor == currentFloor) {
-        e.removePassenger(pInElevator.get(r));
+      Passenger currentPassenger = pInElevator.get(r);
+      if (currentPassenger.destinationFloor == currentFloor) {
+        e.removePassenger(currentPassenger);
+        // print passenger
+        System.out.println(
+          "Passenger removed from elevator: on floor: " + currentFloor
+        );
+        // set end time and record passenger voyage time
+        long endTime = time.getTime();
+        time.recordJourneyTime(currentPassenger.getStartTime(), endTime);
       }
     }
   }
@@ -103,7 +137,9 @@ public class Simulation {
   public void travel(Elevator e, int currentFloor) {
     // generate random floor to go to
     Random rand = new Random();
-    int floor = rand.nextInt(v.getFloors()) + 1;
+    int maxFloor = currentFloor + 5;
+    int minFloor = currentFloor - 5;
+    int floor = rand.nextInt(minFloor, maxFloor);
     // make sure floor is not the same as current floor
     while (floor == currentFloor) {
       floor = rand.nextInt(v.getFloors()) + 1;
@@ -115,6 +151,11 @@ public class Simulation {
     }
     // update floors traveled
     floorstraveled = Math.abs(floor - currentFloor);
+
+    // print movement
+    System.out.println(
+      "Elevator moved: from floor: " + currentFloor + " to floor: " + floor
+    );
     // update current floor
     e.setCurrentFloor(currentFloor);
     // update direction

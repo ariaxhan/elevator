@@ -5,14 +5,23 @@ public class Passenger {
   public int startFloor;
   public int destinationFloor;
   public int pDirection;
-  public int created;
-  public int onElevator;
-  public int offElevator;
-  
+  public long startTime;
+
   public Passenger(variables v) {
-    generate(v);
+    this.generate(v);
     // set time created
-    this.created = 0;
+    this.startTime = 0;
+    // print passenger
+    if (this.startFloor != 0 && this.destinationFloor != 0) {
+      System.out.println(
+        "Passenger created: start: " +
+        this.startFloor +
+        "\n destination: " +
+        this.destinationFloor +
+        "\n direction: " +
+        this.pDirection
+      );
+    }
   }
 
   // public Passenger(int startFloor, int destinationFloor) {
@@ -31,12 +40,17 @@ public class Passenger {
     // create random object
     Random rand = new Random();
     // randomly generate a number between 0 and 1
-    if (rand.nextDouble(0, 1) < v.passengers) {
+    // run probability
+    double probability = rand.nextDouble(0, 1);
+    // if the random number is less than the probability of a passenger being generated
+    // generate a passenger
+    if (probability <= v.passengers) {
+      System.out.println("random number: " + rand.nextDouble(0, 1));
       // generate int as the floor
-      this.startFloor = rand.nextInt(v.floors);
+      this.startFloor = rand.nextInt(1, v.floors);
       // make sure start and end floors are not the same
       while (this.destinationFloor == this.startFloor) {
-        this.destinationFloor = rand.nextInt(v.floors) + 1;
+        this.destinationFloor = rand.nextInt(1, v.floors) + 1;
       }
       // set direction
       setPDirection(startFloor, destinationFloor);
@@ -60,6 +74,10 @@ public class Passenger {
     return this.pDirection;
   }
 
+  // get starttime
+  public long getStartTime() {
+    return this.startTime;
+  }
 
   // setters
   public void setPDirection(int destinationFloor, int startFloor) {

@@ -1,6 +1,4 @@
-import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Queue;
 
 public class Floor {
@@ -22,21 +20,6 @@ public class Floor {
     this.goingup = new LinkedList<>();
     this.goingdown = new LinkedList<>();
   }
-
-  // // check for and remove passengers going to the current floor
-  // public void checkFloor(int currentFloor, Elevator elevator) {
-  //   // loop through passenger list
-  //   for (int i = 0; i < passengerList.size(); i++) {
-  //     // get the passenger and its destination
-  //     Passenger passenger = passengerList.get(i);
-  //     int destination = passenger.getdestinationFloor();
-  //     // if the passenger is going to the current floor
-  //     if (destination == currentFloor) {
-  //       // remove the passenger from the elevator
-  //       this.passengerList.remove(passenger);
-  //     }
-  //   }
-  // }
 
   // method to add passenger to floor given direction
   public void addPassenger(Passenger p, int direction) {

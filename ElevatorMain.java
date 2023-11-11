@@ -8,11 +8,16 @@ public class ElevatorMain {
     variables v = new variables();
     // read in properties file
     readFile("test.properties", v);
+    System.out.println("Variables read in:");
     // create building object
     Building b = new Building(v);
+    System.out.println("Building created:");
     // run simulation
     Simulation s = new Simulation(v, b);
+    System.out.println("Simulation created:");
     s.runSimulation(v);
+    // print times
+    s.time.print();
   }
 
   // function to read in properties file
