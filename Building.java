@@ -55,8 +55,7 @@ public class Building {
   public void generateELevators() {
     // Initialize each elevator of the building
     for (int j = 1; j <= v.elevators; j++) {
-      Elevator elevator = new Elevator(v);
-      elevator.id = j;
+      Elevator elevator = new Elevator(v, j);
       this.elevators.add(elevator); // Add new elevators for each elevator in the building
     }
   }
@@ -66,7 +65,7 @@ public class Building {
     return this.floors.get(floor);
   }
 
-  public Elevator getElevators(int elevator) {
+  public Elevator getElevator(int elevator) {
     return this.elevators.get(elevator);
   }
 }

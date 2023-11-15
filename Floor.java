@@ -9,6 +9,7 @@ public class Floor {
   // queue of passengers going down
   public Queue<Passenger> goingdown;
   public variables v;
+  
 
   // constructor
   public Floor(int floor, variables v) {

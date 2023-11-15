@@ -39,9 +39,9 @@ public class Passenger {
   public void generate(variables v) {
     // create random object
     Random rand = new Random();
-    // randomly generate a number between 0 and 1
+    // randomly generate a number between 0 and 100
     // run probability
-    double probability = rand.nextDouble(0, 100);
+    double probability = rand.nextDouble(0, 100) + 1;
     // if the random number is less than the probability of a passenger being generated
     // generate a passenger
     double currProbability = v.passengers * 100;
@@ -88,7 +88,7 @@ public class Passenger {
   }
 
   // setters
-  public void setPDirection(int destinationFloor, int startFloor) {
+  public void setPDirection(int startFloor, int destinationFloor) {
     if (destinationFloor > startFloor) {
       this.pDirection = 1; // going up
     } else if (destinationFloor < startFloor) {

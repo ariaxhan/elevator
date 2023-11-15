@@ -30,6 +30,7 @@ public class Time {
 
   // Records the journey time of a passenger
   public void recordJourneyTime(long startTime, long endTime) {
+    System.out.println("Journey time: " + (endTime - startTime));
     long journeyTime = endTime - startTime;
     System.out.println("Journey time: " + journeyTime);
     journeyTimes.add(journeyTime);
@@ -45,23 +46,20 @@ public class Time {
 
   // Calculates and returns the average journey time
   public double getAverageJourneyTime() {
-    return this.journeyTimes.isEmpty()
-      ? 0
-      : (double) this.totalJourneyTime / journeyTimes.size();
+    if (journeyTimes.size() == 0) {
+      return 0;
+    }
+    return this.totalJourneyTime / journeyTimes.size();
   }
 
   // Returns the longest journey time
   public long getLongestJourneyTime() {
-    return this.longestJourneyTime == Long.MIN_VALUE
-      ? 0
-      : this.longestJourneyTime;
+    return this.longestJourneyTime;
   }
 
   // Returns the shortest journey time
   public long getShortestJourneyTime() {
-    return this.shortestJourneyTime == Long.MAX_VALUE
-      ? 0
-      : this.shortestJourneyTime;
+    return this.shortestJourneyTime;
   }
 
   // Getter for tickCount

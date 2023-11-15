@@ -8,12 +8,16 @@ public class Simulation {
   private variables v;
   public Building building;
   public Time time;
+  public List<Elevator> elevators;
+  public List<Floor> floors;
 
   // constructor
   public Simulation(variables v, Building building) {
     this.v = v;
     this.building = building;
     this.time = new Time(v);
+    this.elevators = building.elevators;
+    this.floors = building.floors;
   }
 
   // function to run the simulation based on ticks
@@ -21,54 +25,49 @@ public class Simulation {
     // set up simulation to run once per tick
     for (long i = 0; i < v.getDuration(); i++) {
       // run simulation
-      simulation(v);
+      simulation(v, i);
     }
   }
 
-  public void simulation(variables v) {
+  public void simulation(variables v, long tick) {
     // during each "tick" in the duration variable
     // operations on elevators
     System.out.println("Simulation started");
+    // operations on floors
+    // loop through list of floors in the building
+    for (int y = 0; y < this.floors.size(); y++) {
+      // generate a passenger
+      Passenger p = new Passenger(v); // creating a Passenger instance
+      // check if passenger was generated
+      if (p.startFloor == 0 || p.destinationFloor == 0) {
+        // if no passenger was generated, go to next iteration in the loop
+        continue;
+      } else {
+        // initialize passenger time
+        p.startTime = tick;
+        // add the passenger to the floor's queue based on direction
+        if (p.startFloor < p.destinationFloor) {
+          this.building.getFloor(p.startFloor).goingup.add(p);
+          // passenger added to floor queue for going up
+          System.out.println("Passenger added to floor: " + p.startFloor);
+        } else if (p.startFloor > p.destinationFloor) {
+          this.building.getFloor(p.startFloor).goingdown.add(p);
+          // passenger added to floor queue for going down
+          System.out.println("Passenger added to floor: " + p.startFloor);
+        }
+      }
+    }
 
     // loop through list of elevators in the building
-    for (int j = 0; j < v.getElevators(); j++) {
-      Elevator currentElevator = building.getElevators(j);
+    for (int j = 0; j < this.elevators.size(); j++) {
+      Elevator currentElevator = this.elevators.get(j);
       // run load/unload and travel functions for each elevator,
-      // alternating between the two functions every tick
-      System.out.println("Elevator: " + j);
-      // operations on floors
-      // loop through list of floors in the building
-      for (int y = 0; y < v.getFloors(); y++) {
-        // generate a passenger
-        Passenger p = new Passenger(v); // creating a Passenger instance
-        // check if passenger was generated
-        if (p.startFloor == 0 || p.destinationFloor == 0) {
-          // if no passenger was generated, go to next iteration in the loop
-          j++;
-        } else {
-          // initialize passenger time
-          p.startTime = time.getTime();
-          // add the passenger to the floor's queue based on direction
-          if (p.startFloor < p.destinationFloor) {
-            building.getFloor(p.startFloor).goingup.add(p);
-            // passenger added to floor queue for going up
-            System.out.println("Passenger added to floor: " + p.startFloor);
-          } else if (p.startFloor > p.destinationFloor) {
-            building.getFloor(p.startFloor).goingdown.add(p);
-            // passenger added to floor queue for going down
-            System.out.println("Passenger added to floor: " + p.startFloor);
-          }
-        }
-
-        if (j % 2 == 0) {
-          // load
-          load(currentElevator, building, currentElevator.getCurrentFloor());
-          // unload
-          unload(currentElevator, building, currentElevator.getCurrentFloor());
-        } else {
-          // travel
-          travel(currentElevator, currentElevator.getCurrentFloor());
-        }
+      if (j % 2 == 0) {
+        // travel
+        travel(currentElevator, currentElevator.getCurrentFloor());
+      } else {
+        // load
+        load(currentElevator, currentElevator.getCurrentFloor(), tick);
       }
     }
   }
@@ -78,20 +77,20 @@ public class Simulation {
   // an elevator going in the desired direction (up or down). You may assume that passengers never
   // enter an elevator going in the wrong direction.
 
-  public void load(Elevator e, Building b, int currentFloor) {
+  public void load(Elevator e, int currentFloor, long tick) {
     System.out.println("Load started");
     // add any passengers going up or down to the elevator based on direction of elevator
     // get direction of elevator
     int direction = e.getDirection();
     // get the floor object for the current floor
-    Floor floor = b.getFloor(currentFloor);
+    Floor floor = this.building.getFloor(currentFloor);
     // get passenger list for that floor
     Queue<Passenger> pOnFloor = floor.getPassengerList(direction);
     if (pOnFloor == null) {
       return;
     }
     // loop through passengers on the floor
-    for (int i = 0; i < pOnFloor.size(); i++) {
+    while (pOnFloor.peek() != null) {
       // get next passenger from queue
       Passenger p = floor.getNextPassenger(direction);
       // check if elevator is full
@@ -101,69 +100,93 @@ public class Simulation {
       } else {
         // if elevator is not full, remove passenger from floor
         floor.removePassenger(p, direction);
+
+        // add passenger to elevator
+        e.addPassenger(p);
       }
-      // add passenger to elevator
-      e.addPassenger(p);
       // print passenger
       System.out.println(
         "Passenger added to elevator: on floor: " + currentFloor
       );
-    }
-  }
+      // get all passengers in the elevator
+      System.out.println(
+        "Unload started with " + e.getPassengerList().size() + " passengers"
+      );
 
-  // function to unload elevator based on the current floor
-  public void unload(Elevator e, Building b, int currentFloor) {
-    // get all passengers in the elevator
-    List<Passenger> pInElevator = e.getPassengerList();
-    System.out.println(
-      "Unload started with " + pInElevator.size() + " passengers"
-    );
-
-    // loop through passengers in the elevator
-    for (int r = 0; r < pInElevator.size(); r++) {
-      // if the passenger's destinationFloor is the current floor
-      // remove the passenger from the elevator
-      Passenger currentPassenger = pInElevator.get(r);
-      if (currentPassenger.destinationFloor == currentFloor) {
-        e.removePassenger(currentPassenger);
-        // print passenger
-        System.out.println(
-          "Passenger removed from elevator: on floor: " + currentFloor
-        );
-        // set end time and record passenger voyage time
-        long endTime = time.getTime();
-        time.recordJourneyTime(currentPassenger.getStartTime(), endTime);
+      // loop through passengers in the elevator
+      for (int r = 0; r < e.getPassengerList().size(); r++) {
+        // if the passenger's destinationFloor is the current floor
+        // remove the passenger from the elevator
+        Passenger currentPassenger = e.getPassengerList().get(r);
+        if (currentPassenger.destinationFloor == currentFloor) {
+          e.removePassenger(currentPassenger);
+          // print passenger
+          System.out.println(
+            "Passenger removed from elevator: on floor: " + currentFloor
+          );
+          // set end time and record passenger voyage time
+          long endTime = tick;
+          time.recordJourneyTime(currentPassenger.getStartTime(), endTime);
+        }
       }
-    }
 
-    System.out.println(
-      "Unload ended with " + pInElevator.size() + " passengers"
-    );
+      System.out.println(
+        "Unload ended with " + e.getPassengerList().size() + " passengers"
+      );
+    }
   }
 
   // move elevator
   // function to Elevator travel: An elevator may travel between no more than 5 floors (eg. from the 8th floor to
   // load unload must happen at current floor
   public void travel(Elevator e, int currentFloor) {
+    // check direction
+    if (e.getDirection() == 0) {
+      // if direction is 0, set direction to 1
+      e.setUp();
+    }
+    if (e.getCurrentFloor() < v.getFloors()) {
+      // if current floor is 0, set current floor to 1
+      e.setCurrentFloor(1);
+      e.setUp();
+      // if elevator is at max floor, set direction to -1
+    } else if (e.getCurrentFloor() == v.getFloors()) {
+      e.setDown();
+    }
     // generate random floor to go to
     Random rand = new Random();
-    int maxFloor = currentFloor + 5;
-    int minFloor = currentFloor - 5;
-    if (minFloor < 1) {
-      minFloor = 1;
+    if (e.getDirection() == 1) {
+      // going up
+      int minFloor = currentFloor + 1;
+      int maxFloor = v.getFloors();
+      if (minFloor + 5 < maxFloor) {
+        maxFloor = minFloor + 5;
+      }
+      int floor = rand.nextInt((maxFloor - minFloor) + 1) + minFloor;
+      // print movement
+      System.out.println(
+        "Elevator moved: from floor: " + currentFloor + " to floor: " + floor
+      );
+      // update current floor
+      e.setCurrentFloor(floor);
+      // update direction
+      e.setDirection(currentFloor, floor);
+    } else if (e.getDirection() == -1) {
+      // going down
+      int maxFloor = currentFloor - 1;
+      int minFloor = 1;
+      if (maxFloor - 5 > minFloor) {
+        minFloor = maxFloor - 5;
+      }
+      int floor = rand.nextInt((maxFloor - minFloor) + 1) + minFloor;
+      // print movement
+      System.out.println(
+        "Elevator moved: from floor: " + currentFloor + " to floor: " + floor
+      );
+      // update current floor
+      e.setCurrentFloor(floor);
+      // update direction
+      e.setDirection(currentFloor, floor);
     }
-    int floor = rand.nextInt(minFloor, maxFloor);
-    // make sure floor is not the same as current floor
-    while (floor == currentFloor) {
-      floor = rand.nextInt(v.getFloors()) + 1;
-    }
-    // print movement
-    System.out.println(
-      "Elevator moved: from floor: " + currentFloor + " to floor: " + floor
-    );
-    // update current floor
-    e.setCurrentFloor(currentFloor);
-    // update direction
-    e.setDirection(currentFloor, floor);
   }
 }
