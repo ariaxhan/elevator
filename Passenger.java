@@ -45,7 +45,6 @@ public class Passenger {
     // if the random number is less than the probability of a passenger being generated
     // generate a passenger
     double currProbability = v.passengers * 100;
-    System.out.println(currProbability + "  " + probability);
     if (probability <= currProbability) {
       System.out.println("random number: " + probability);
       // generate int as the start floor

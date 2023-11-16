@@ -4,77 +4,75 @@ import java.util.List;
 
 public class Elevator {
 
-  public int currentFloor = 1;
-  public int capacity = 0;
-  public variables v;
-  // list of all passengers in the elevator
-  public List<Passenger> passengers;
-  int goingUp = 0;
+  public static final int UP = 1;
+  public static final int DOWN = -1;
+  public static final int STATIONARY = 0;
 
-  // constructor
-  public Elevator(variables v, int id) {
-    // set variables
+  public int currentFloor;
+  public int capacity;
+  public variables v;
+  public List<Passenger> passengers;
+  public int direction;
+
+  // Constructor
+  public Elevator(variables v) {
     this.v = v;
-    // set capacity
-    this.capacity = v.getElevatorCapacity();
-    // set type of list for passengers
+    this.capacity = 0;
+    this.currentFloor = 1;
+    this.direction = UP; // Initial direction can be set to UP or STATIONARY
+
     if (v.getStructures().equals("linked")) {
       this.passengers = new LinkedList<>();
-    } else if (v.getStructures().equals("array")) {
+    } else {
       this.passengers = new ArrayList<>();
     }
-    // set current floor
-    this.currentFloor = 1;
-    // set direction
-    this.goingUp = 1;
   }
 
-  // method to add passenger to elevator
-  public void addPassenger(Passenger p) {
-    this.passengers.add(p);
-  }
-
-  // method to remove a passenger from the elevator
-  public void removePassenger(Passenger p) {
-    this.passengers.remove(p);
-  }
-
-  // method to get passenger list
-  public List<Passenger> getPassengerList() {
-    return this.passengers;
-  }
-
-  // method to get currentFloor of elevator
   public int getCurrentFloor() {
-    return this.currentFloor;
+    return currentFloor;
   }
 
-  // method to set currentFloor of the elevator
-  public void setCurrentFloor(int currentFloor) {
-    this.currentFloor = currentFloor;
+  public void setCurrentFloor(int floor) {
+    this.currentFloor = floor;
   }
 
-  // method to get direction
   public int getDirection() {
-    return this.goingUp;
+    return direction;
   }
 
-  // function to set direction
+  public int addPassenger(Passenger p) {
+    if (capacity == v.getElevatorCapacity()) {
+      return -1;
+    }
+    passengers.add(p);
+    capacity++;
+    return 0;
+  }
+
   public void setDirection(int currentFloor, int destinationFloor) {
     if (destinationFloor > currentFloor) {
-      this.goingUp = 1; // going up
+      direction = UP;
     } else if (destinationFloor < currentFloor) {
-      this.goingUp = -1; // going down
+      direction = DOWN;
     } else {
-      this.goingUp = 0;
+      direction = STATIONARY;
     }
   }
 
   public void setUp() {
-    this.goingUp = 1;
+    direction = UP;
   }
 
   public void setDown() {
-    this.goingUp = -1;
+    direction = DOWN;
+  }
+
+  public List<Passenger> getPassengerList() {
+    return passengers;
+  }
+
+  public void removePassenger(Passenger p) {
+    passengers.remove(p);
+    capacity--;
   }
 }

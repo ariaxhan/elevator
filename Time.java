@@ -3,89 +3,65 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Time {
+    private List<Long> journeyTimes; // Store journey times in ticks
+    private long totalJourneyTicks; // Total ticks for all journeys to calculate average
+    private long longestJourneyTicks; // Longest journey in ticks
+    private long shortestJourneyTicks; // Shortest journey in ticks
+    private long tickCount; // Current tick count in the simulation
 
-  private List<Long> journeyTimes; // List to store journey times for all passengers
-  private long totalJourneyTime; // Total time for all journeys to calculate average
-  private long longestJourneyTime; // Longest journey time
-  private long shortestJourneyTime; // Shortest journey time
-  private long tickCount; // Track the number of ticks
-  public variables v;
-
-  public Time(variables v) {
-    this.journeyTimes = new ArrayList<>();
-    this.totalJourneyTime = 0;
-    this.longestJourneyTime = Long.MIN_VALUE;
-    this.shortestJourneyTime = Long.MAX_VALUE;
-    this.tickCount = 0;
-    this.v = v;
-  }
-
-  // Method to be called for every tick that happens in the simulation
-  public void onTick() {
-    // Increment the tick count
-    tickCount++;
-    // record journey times of all passengers
-
-  }
-
-  // Records the journey time of a passenger
-  public void recordJourneyTime(long startTime, long endTime) {
-    System.out.println("Journey time: " + (endTime - startTime));
-    long journeyTime = endTime - startTime;
-    System.out.println("Journey time: " + journeyTime);
-    journeyTimes.add(journeyTime);
-    totalJourneyTime += journeyTime;
-
-    if (journeyTime > longestJourneyTime) {
-      this.longestJourneyTime = journeyTime;
+    public Time() {
+        this.journeyTimes = new ArrayList<>();
+        this.totalJourneyTicks = 0;
+        this.longestJourneyTicks = 0;
+        this.shortestJourneyTicks = Long.MAX_VALUE;
+        this.tickCount = 0;
     }
-    if (journeyTime < shortestJourneyTime) {
-      this.shortestJourneyTime = journeyTime;
+
+    // Called for every tick in the simulation
+    public void onTick() {
+        tickCount++;
     }
-  }
 
-  // Calculates and returns the average journey time
-  public double getAverageJourneyTime() {
-    if (journeyTimes.size() == 0) {
-      return 0;
+    // Record a journey based on start and end ticks
+    public void recordJourneyTime(long startTick, long endTick) {
+        long journeyTicks = endTick - startTick;
+        journeyTimes.add(journeyTicks);
+        totalJourneyTicks += journeyTicks;
+
+        if (journeyTicks > longestJourneyTicks) {
+            longestJourneyTicks = journeyTicks;
+        }
+        if (journeyTicks < shortestJourneyTicks) {
+            shortestJourneyTicks = journeyTicks;
+        }
     }
-    return this.totalJourneyTime / journeyTimes.size();
-  }
 
-  // Returns the longest journey time
-  public long getLongestJourneyTime() {
-    return this.longestJourneyTime;
-  }
+    // Get average journey time in ticks
+    public double getAverageJourneyTime() {
+        if (journeyTimes.isEmpty()) {
+            return 0.0;
+        }
+        return (double) totalJourneyTicks / journeyTimes.size();
+    }
 
-  // Returns the shortest journey time
-  public long getShortestJourneyTime() {
-    return this.shortestJourneyTime;
-  }
+    // Get the longest journey time in ticks
+    public long getLongestJourneyTime() {
+        return longestJourneyTicks;
+    }
 
-  // Getter for tickCount
-  public long getTickCount() {
-    return tickCount;
-  }
+    // Get the shortest journey time in ticks
+    public long getShortestJourneyTime() {
+        return shortestJourneyTicks == Long.MAX_VALUE ? 0 : shortestJourneyTicks;
+    }
 
-  public long getTime() {
-    // get current time in milliseconds
-    long time = System.currentTimeMillis();
-    return time;
-  }
+    public long getTickCount() {
+        return tickCount;
+    }
 
-  // function to print times
-  public void print() {
-    // print average journey time
-    System.out.println(
-      "Average journey time: " + this.getAverageJourneyTime() + " seconds"
-    );
-    // print longest journey time
-    System.out.println(
-      "Longest journey time: " + this.getLongestJourneyTime() + " seconds"
-    );
-    // print shortest journey time
-    System.out.println(
-      "Shortest journey time: " + this.getShortestJourneyTime() + " seconds"
-    );
-  }
+    // Print journey times in ticks
+    public void print() {
+        System.out.println("Average journey time: " + getAverageJourneyTime() + " ticks");
+        System.out.println("Longest journey time: " + getLongestJourneyTime() + " ticks");
+        System.out.println("Shortest journey time: " + getShortestJourneyTime() + " ticks");
+    }
 }

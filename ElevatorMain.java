@@ -15,9 +15,7 @@ public class ElevatorMain {
     // run simulation
     Simulation s = new Simulation(v, b);
     System.out.println("Simulation created:");
-    for (int i = 0; i < v.getDuration(); i++) {
       s.runSimulation(v);
-    }
     // print times
     s.time.print();
   }

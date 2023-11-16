@@ -3,69 +3,49 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class Building {
+    public variables v;
+    public List<Floor> floors;
+    public List<Elevator> elevators;
 
-  // building has floors and elevators
-  // each floor has two queues of passengers (up and down)
-  // each elevator has a list of passengers
-  // the passengers for both are self-contained in the Floor and Elevator classes
-  // all of the elevators and floors are in the same building
-  // the building class generates the floors and the elevators
-  // the simulation adds passengers to the floors, moves the elevators,
-  // and adds or removes to the elevators and floors as appropriate
+    // Constructor
+    public Building(variables v) {
+        this.v = v;
+        // Initialize floors and elevators based on v.getStructures()
+        this.floors = (v.getStructures().equals("linked")) ? new LinkedList<>() : new ArrayList<>();
+        this.elevators = (v.getStructures().equals("linked")) ? new LinkedList<>() : new ArrayList<>();
 
-  public variables v;
-  public List<Floor> floors;
-  public List<Elevator> elevators;
+        // Generate floors and elevators
+        generateFloors();
+        generateElevators();
 
-  // constructor for building
-  public Building(variables v) {
-    // set variables
-    this.v = v;
-    // set type of lists for floors and elevators
-    if (v.getStructures().equals("linked")) {
-      this.floors = new LinkedList<>();
-      this.elevators = new LinkedList<>();
-    } else if (v.getStructures().equals("array")) {
-      this.floors = new ArrayList<>();
-      this.elevators = new ArrayList<>();
+        System.out.println("Building generated with " + floors.size() + " floors and " + elevators.size() + " elevators");
     }
-    // generate floors
-    this.generateFloors();
-    // generate elevators
-    this.generateELevators();
 
-    // print successful generation
-    System.out.println(
-      "Building generated with " +
-      floors.size() +
-      " floors and " +
-      elevators.size() +
-      " elevators"
-    );
-  }
-
-  public void generateFloors() {
-    // Initialize each floor of the building
-    for (int j = 1; j <= v.floors; j++) {
-      Floor floor = new Floor(j, v);
-      this.floors.add(floor); // Add new floors for each floor in the building
+    private void generateFloors() {
+        for (int i = 1; i <= v.getFloors(); i++) {
+            floors.add(new Floor(i, v));
+        }
     }
-  }
 
-  public void generateELevators() {
-    // Initialize each elevator of the building
-    for (int j = 1; j <= v.elevators; j++) {
-      Elevator elevator = new Elevator(v, j);
-      this.elevators.add(elevator); // Add new elevators for each elevator in the building
+    private void generateElevators() {
+        for (int i = 1; i <= v.getElevators(); i++) {
+            elevators.add(new Elevator(v));
+        }
     }
-  }
 
-  // get floor and elevator at index
-  public Floor getFloor(int floor) {
-    return this.floors.get(floor);
-  }
+    // Get a floor by its number. Floor numbers start from 1.
+    public Floor getFloor(int floorNumber) {
+        if (floorNumber < 1 || floorNumber > floors.size()) {
+            throw new IllegalArgumentException("Floor number " + floorNumber + " is out of range");
+        }
+        return floors.get(floorNumber - 1); // Adjust for zero-based indexing
+    }
 
-  public Elevator getElevator(int elevator) {
-    return this.elevators.get(elevator);
-  }
+    // Get an elevator by its index. Indices start from 1.
+    public Elevator getElevator(int elevatorIndex) {
+        if (elevatorIndex < 1 || elevatorIndex > elevators.size()) {
+            throw new IllegalArgumentException("Elevator index " + elevatorIndex + " is out of range");
+        }
+        return elevators.get(elevatorIndex - 1); // Adjust for zero-based indexing
+    }
 }

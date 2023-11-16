@@ -3,62 +3,66 @@ import java.util.Queue;
 
 public class Floor {
 
-  public int floor = 0;
-  // queue of passengers going up
-  public Queue<Passenger> goingup;
-  // queue of passengers going down
-  public Queue<Passenger> goingdown;
+  public int floorNumber;
+  public static final int UP = 1;
+  public static final int DOWN = -1;
+  public Queue<Passenger> goingUp;
+  public Queue<Passenger> goingDown;
   public variables v;
-  
 
-  // constructor
-  public Floor(int floor, variables v) {
-    // set variables
+  // Constructor
+  public Floor(int floorNumber, variables v) {
+    this.floorNumber = floorNumber;
     this.v = v;
-    // set number of floor
-    this.floor = floor;
-    // create queues
-    this.goingup = new LinkedList<>();
-    this.goingdown = new LinkedList<>();
+    this.goingUp = new LinkedList<>();
+    this.goingDown = new LinkedList<>();
   }
 
-  // method to add passenger to floor given direction
+  // Add a passenger to the appropriate queue based on direction
   public void addPassenger(Passenger p, int direction) {
-    if (direction == 1) {
-      this.goingup.add(p);
-    } else if (direction == -1) {
-      this.goingdown.add(p);
+    if (direction == UP) {
+      goingUp.add(p);
+    } else if (direction == DOWN) {
+      goingDown.add(p);
+    } else {
+      // Handle invalid direction
+      throw new IllegalArgumentException("Invalid direction: " + direction);
     }
   }
 
-  // method to remove passenger from floor given direction
+  // Remove a passenger from the appropriate queue
   public void removePassenger(Passenger p, int direction) {
-    if (direction == 1) {
-      this.goingup.remove(p);
-    } else if (direction == -1) {
-      this.goingdown.remove(p);
+    if (direction == UP) {
+      goingUp.remove();
+    } else if (direction == DOWN) {
+      goingDown.remove();
+    } else {
+      // Handle invalid direction
+      throw new IllegalArgumentException("Invalid direction: " + direction);
     }
   }
 
-  // method to get passenger queue
+  // Get the queue of passengers for a given direction
   public Queue<Passenger> getPassengerList(int direction) {
-    if (direction == 1) {
-      return this.goingup;
-    } else if (direction == -1) {
-      return this.goingdown;
+    if (direction == UP) {
+      return goingUp;
+    } else if (direction == DOWN) {
+      return goingDown;
     } else {
-      return null;
+      // Handle invalid direction
+      throw new IllegalArgumentException("Invalid direction: " + direction);
     }
   }
 
-  // method to get next passenger in the queue
+  // Get the next passenger from the queue without removing them
   public Passenger getNextPassenger(int direction) {
-    if (direction == 1) {
-      return this.goingup.peek();
-    } else if (direction == -1) {
-      return this.goingdown.peek();
+    if (direction == UP) {
+      return goingUp.peek();
+    } else if (direction == DOWN) {
+      return goingDown.peek();
     } else {
-      return null;
+      // Handle invalid direction
+      throw new IllegalArgumentException("Invalid direction: " + direction);
     }
   }
 }
