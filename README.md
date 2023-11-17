@@ -3,17 +3,17 @@
 Special thanks to ChatGPT and GitHub CoPilot. 
 
 ## Table of Contents ##
-*Building*
-*Elevator*
-*ElevatorMain*
-*Floor*
-*Passenger*
-*Simulation*
-*Time*
-*variables*
++ Building
++ Elevator
++ ElevatorMain
++ Floor
++ Passenger
++ Simulation
++ Time
++ variables
 
 # Building
-	Class for the building that the simulation runs in. The building is generated with floors and elevators. All of the passengers exist within the same building object. 
+	Class for the building that the simulation runs in. The building is generated with floors and elevators. The floors and elevators are stored in either linkedlists or arraylists based on the properties file. 
 
 # Elevator
 	Class for elevators. Each one is generated with a unique id. Passengers are stored in a linkedlist or an arraylist based on what the properties file specified. 
