@@ -1,18 +1,21 @@
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
 
 public class Elevator {
 
   public static final int UP = 1;
   public static final int DOWN = -1;
   public static final int STATIONARY = 0;
+  public static int nextId = 1;
 
   public int currentFloor;
   public int capacity;
   public variables v;
   public List<Passenger> passengers;
   public int direction;
+  public int id;
 
   // Constructor
   public Elevator(variables v) {
@@ -20,6 +23,8 @@ public class Elevator {
     this.capacity = 0;
     this.currentFloor = 1;
     this.direction = UP; // Initial direction can be set to UP or STATIONARY
+    this.id = nextId;
+    nextId++;
 
     if (v.getStructures().equals("linked")) {
       this.passengers = new LinkedList<>();
@@ -38,6 +43,10 @@ public class Elevator {
 
   public int getDirection() {
     return direction;
+  }
+
+  public int getId() {
+    return id;
   }
 
   public int addPassenger(Passenger p) {

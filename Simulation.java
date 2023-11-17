@@ -22,17 +22,6 @@ public class Simulation {
 
   // function to run the simulation based on ticks
   public void runSimulation(variables v) {
-    // generate a passenger for each floor
-    for (int i = 1; i < this.building.floors.size(); i++) {
-      // generate a passenger for each floor
-      Passenger p = new Passenger(v, i, i + 1); // creating a Passenger instance
-      // add the passenger to the floor's queue based on direction
-      if (p.startFloor < p.destinationFloor) {
-        this.building.getFloor(p.startFloor).goingUp.add(p);
-      } else if (p.startFloor > p.destinationFloor) {
-        this.building.getFloor(p.startFloor).goingDown.add(p);
-      }
-    }
     // set up simulation to run once per tick
     for (long i = 0; i < v.getDuration(); i++) {
       // run simulation
@@ -66,7 +55,7 @@ public class Simulation {
         // run load/unload and travel functions for each elevator,
         travel(currentElevator, currentElevator.getCurrentFloor());
       }
-      // load
+      // load and unload passengers
       load(currentElevator, currentElevator.getCurrentFloor(), tick);
       unload(currentElevator, currentElevator.getCurrentFloor(), tick);
     }
@@ -93,10 +82,9 @@ public class Simulation {
     while (pOnFloor.peek() != null && e.capacity < v.getElevatorCapacity()) {
       // get next passenger from queue
       Passenger p = floor.getNextPassenger(direction);
-      // if elevator is not full, remove passenger from floor
-      floor.removePassenger(p, direction);
       // add passenger to elevator
       e.addPassenger(p);
+      System.out.println("Passenger " + p.getId() + " entered elevator " + e.getId() + " at floor " + currentFloor + " at time " + tick);
     }
   }
 
@@ -111,6 +99,7 @@ public class Simulation {
         // set end time and record passenger voyage time
         long endTime = tick;
         time.recordJourneyTime(currentPassenger.getStartTime(), endTime);
+        System.out.println("Passenger " + currentPassenger.getId() + " exited elevator " + e.getId() + " at floor " + currentFloor + " at time " + tick);
       }
     }
   }

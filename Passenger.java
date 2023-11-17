@@ -2,20 +2,32 @@ import java.util.Random;
 
 public class Passenger {
 
+  public static int nextId = 1;
+  public final int UP = 1;
+  public final int DOWN = -1;
+
   public int startFloor;
   public int destinationFloor;
   public int pDirection;
   public long startTime;
+  public int id;
 
   public Passenger(variables v) {
     this.generate(v);
-    
-  }
-
-  public Passenger(variables v, int startFloor, int destinationFloor) {
-    this.startFloor = startFloor;
-    this.destinationFloor = destinationFloor;
-    this.setPDirection(startFloor, destinationFloor);
+    this.id = nextId;
+    nextId++;
+    if (this.startFloor != 0 && this.destinationFloor != 0) {
+      System.out.println(
+        "Passenger " +
+        this.id +
+        " generated on floor " +
+        this.startFloor +
+        " going " +
+        this.getPDirection() +
+        " to floor " +
+        this.destinationFloor
+      );
+    }
   }
 
   // function to generate a passenger
@@ -59,8 +71,18 @@ public class Passenger {
     return destinationFloor;
   }
 
-  public int getPDirection() {
-    return this.pDirection;
+  public String getPDirection() {
+    if (this.pDirection == 1) {
+      return "up";
+    } else if (this.pDirection == -1) {
+      return "down";
+    } else {
+      return "stationary";
+    }
+  }
+
+  public int getId() {
+    return this.id;
   }
 
   // get starttime

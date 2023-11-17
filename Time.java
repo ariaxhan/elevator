@@ -17,11 +17,6 @@ public class Time {
         this.tickCount = 0;
     }
 
-    // Called for every tick in the simulation
-    public void onTick() {
-        tickCount++;
-    }
-
     // Record a journey based on start and end ticks
     public void recordJourneyTime(long startTick, long endTick) {
         long journeyTicks = endTick - startTick;
