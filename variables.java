@@ -95,14 +95,4 @@ public class variables {
       this.duration = 500;
     }
   }
-
-  // print function to check input
-  public void print() {
-    System.out.println("structures: " + structures + "\n");
-    System.out.println("floors: " + floors + "\n");
-    System.out.println("passengers: " + passengers + "\n");
-    System.out.println("elevators: " + elevators + "\n");
-    System.out.println("elevatorCapacity: " + elevatorCapacity + "\n");
-    System.out.println("duration: " + duration + "\n");
-  }
 }

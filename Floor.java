@@ -32,13 +32,17 @@ public class Floor {
 
   // Remove a passenger from the appropriate queue
   public void removePassenger(Passenger p, int direction) {
-    if (direction == UP) {
-      goingUp.remove();
-    } else if (direction == DOWN) {
-      goingDown.remove();
-    } else {
-      // Handle invalid direction
-      throw new IllegalArgumentException("Invalid direction: " + direction);
+    try {
+      if (direction == UP) {
+        goingUp.remove();
+      } else if (direction == DOWN) {
+        goingDown.remove();
+      } else {
+        // Handle invalid direction
+        throw new IllegalArgumentException("Invalid direction: " + direction);
+      }
+    } catch (Exception e) {
+      
     }
   }
 
@@ -57,9 +61,9 @@ public class Floor {
   // Get the next passenger from the queue without removing them
   public Passenger getNextPassenger(int direction) {
     if (direction == UP) {
-      return goingUp.peek();
+      return goingUp.poll();
     } else if (direction == DOWN) {
-      return goingDown.peek();
+      return goingDown.poll();
     } else {
       // Handle invalid direction
       throw new IllegalArgumentException("Invalid direction: " + direction);

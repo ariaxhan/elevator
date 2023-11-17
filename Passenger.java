@@ -9,31 +9,14 @@ public class Passenger {
 
   public Passenger(variables v) {
     this.generate(v);
-    // set time created
-    this.startTime = 0;
-    // print passenger
-    if (this.startFloor != 0 && this.destinationFloor != 0) {
-      System.out.println(
-        "Passenger created: start: " +
-        this.startFloor +
-        "\n destination: " +
-        this.destinationFloor +
-        "\n direction: " +
-        this.pDirection
-      );
-    }
+    
   }
 
-  // public Passenger(int startFloor, int destinationFloor) {
-  //   this.startFloor = startFloor;
-  //   this.destinationFloor = startFloor;
-  //   this.pDirection = getPDirection();
-  // }
-
-  // public Passenger() {
-  //   this.startFloor = 0;
-  //   this.destinationFloor = 0;
-  // }
+  public Passenger(variables v, int startFloor, int destinationFloor) {
+    this.startFloor = startFloor;
+    this.destinationFloor = destinationFloor;
+    this.setPDirection(startFloor, destinationFloor);
+  }
 
   // function to generate a passenger
   public void generate(variables v) {
@@ -46,7 +29,6 @@ public class Passenger {
     // generate a passenger
     double currProbability = v.passengers * 100;
     if (probability <= currProbability) {
-      System.out.println("random number: " + probability);
       // generate int as the start floor
       int startFloor = rand.nextInt(1, v.floors);
       // generate int as the destination floor
