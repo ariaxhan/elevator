@@ -31,12 +31,12 @@ public class Floor {
   }
 
   // Remove a passenger from the appropriate queue
-  public void removePassenger(Passenger p, int direction) {
+  public void removePassenger(int direction) {
     try {
       if (direction == UP) {
-        goingUp.remove();
+        goingUp.poll();
       } else if (direction == DOWN) {
-        goingDown.remove();
+        goingDown.poll();
       } else {
         // Handle invalid direction
         throw new IllegalArgumentException("Invalid direction: " + direction);
@@ -58,7 +58,7 @@ public class Floor {
     }
   }
 
-  // Get the next passenger from the queue without removing them
+  // Get the next passenger from the queue 
   public Passenger getNextPassenger(int direction) {
     if (direction == UP) {
       return goingUp.poll();
