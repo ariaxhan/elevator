@@ -16,18 +16,6 @@ public class Passenger {
     this.generate(v);
     this.id = nextId;
     nextId++;
-    if (this.startFloor != 0 && this.destinationFloor != 0) {
-      System.out.println(
-        "Passenger " +
-        this.id +
-        " generated on floor " +
-        this.startFloor +
-        " going " +
-        this.getPDirection() +
-        " to floor " +
-        this.destinationFloor
-      );
-    }
   }
 
   // function to generate a passenger

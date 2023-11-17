@@ -84,7 +84,6 @@ public class Simulation {
       Passenger p = floor.getNextPassenger(direction);
       // add passenger to elevator
       e.addPassenger(p);
-      System.out.println("Passenger " + p.getId() + " entered elevator " + e.getId() + " at floor " + currentFloor + " at time " + tick);
     }
   }
 
@@ -99,7 +98,6 @@ public class Simulation {
         // set end time and record passenger voyage time
         long endTime = tick;
         time.recordJourneyTime(currentPassenger.getStartTime(), endTime);
-        System.out.println("Passenger " + currentPassenger.getId() + " exited elevator " + e.getId() + " at floor " + currentFloor + " at time " + tick);
       }
     }
   }
