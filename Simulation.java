@@ -58,6 +58,7 @@ public class Simulation {
       // load and unload passengers
       load(currentElevator, currentElevator.getCurrentFloor(), tick);
       unload(currentElevator, currentElevator.getCurrentFloor(), tick);
+      
     }
     toggle = !toggle;
   }
