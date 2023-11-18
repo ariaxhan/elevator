@@ -16,8 +16,8 @@ public class Simulation {
     this.v = v;
     this.building = building;
     this.time = new Time();
-    this.elevators = building.elevators;
-    this.floors = building.floors;
+    this.elevators = building.getElevators();
+    this.floors = building.getFloors();
   }
 
   // function to run the simulation based on ticks

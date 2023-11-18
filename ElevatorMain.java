@@ -12,7 +12,7 @@ public class ElevatorMain {
     Building b = new Building(v);
     // run simulation
     Simulation s = new Simulation(v, b);
-      s.runSimulation(v);
+    s.runSimulation(v);
     // print times
     s.time.print();
   }

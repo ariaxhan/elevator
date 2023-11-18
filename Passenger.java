@@ -52,11 +52,11 @@ public class Passenger {
 
   // getters
   public int getStartFloor() {
-    return startFloor;
+    return this.startFloor;
   }
 
   public int getdestinationFloor() {
-    return destinationFloor;
+    return this.destinationFloor;
   }
 
   public String getPDirection() {
