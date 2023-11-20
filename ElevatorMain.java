@@ -7,7 +7,8 @@ public class ElevatorMain {
     // create variables object
     variables v = new variables();
     // read in properties file
-    readFile("test.properties", v);
+    String filename = args[0];
+    readFile(filename, v);
     // create building object
     Building b = new Building(v);
     // run simulation

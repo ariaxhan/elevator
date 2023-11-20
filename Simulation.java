@@ -32,22 +32,23 @@ public class Simulation {
   public void simulation(variables v, long tick) {
     boolean toggle = true;
     // during each "tick" in the duration variable
-    // generate a passenger
-    Passenger p = new Passenger(v); // creating a Passenger instance
-    // check if passenger was generated
-    if (p.startFloor == 0 || p.destinationFloor == 0) {
-      // if no passenger was generated, skip
-    } else {
-      // initialize passenger time
-      p.startTime = tick;
-      // add the passenger to the floor's queue based on direction
-      if (p.startFloor < p.destinationFloor) {
-        this.building.getFloor(p.startFloor).goingUp.add(p);
-      } else if (p.startFloor > p.destinationFloor) {
-        this.building.getFloor(p.startFloor).goingDown.add(p);
+    // generate a passenger for each floor
+    for (int r = 0; r < floors.size(); r++) {
+      Passenger p = new Passenger(v); // creating a Passenger instance
+      // check if passenger was generated
+      if (p.startFloor == 0 || p.destinationFloor == 0) {
+        // if no passenger was generated, skip
+      } else {
+        // initialize passenger time
+        p.startTime = tick;
+        // add the passenger to the floor's queue based on direction
+        if (p.startFloor < p.destinationFloor) {
+          this.building.getFloor(p.startFloor).goingUp.add(p);
+        } else if (p.startFloor > p.destinationFloor) {
+          this.building.getFloor(p.startFloor).goingDown.add(p);
+        }
       }
     }
-
     // loop through list of elevators in the building
     for (int j = 0; j < this.elevators.size(); j++) {
       Elevator currentElevator = this.elevators.get(j);
