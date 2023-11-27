@@ -1,0 +1,103 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+		{
+			"type": "java",
+			"request": "attach",
+			"name": "Java",
+			"port": 5005,
+			"sourceRoots": []
+		},
+		{
+			"type": "java",
+			"name": "Time",
+			"request": "launch",
+			"mainClass": "Time",
+			"projectName": "elevator_898c234a"
+		},
+		{
+			"name": "Java",
+			"type": "java",
+			"request": "launch",
+			"stopOnEntry": true,
+			"jdkPath": "${env:JAVA_HOME}/bin",
+			"cwd": "${fileDirname}",
+			"startupClass": "${fileBasenameNoExtension}",
+			"classpath": [
+				".",
+				"${fileDirname}"
+			],
+			"stepFilters": {
+				"classNameFilters": [
+					"java.*",
+					"javax.*",
+					"sun.*",
+					"com.sun.*"
+				],
+				"skipSynthetics": true,
+				"skipStaticInitializers": true,
+				"skipConstructors": true
+			}
+		},
+		{
+			"name": "Java Console App",
+			"type": "java",
+			"request": "launch",
+			"stopOnEntry": true,
+			"jdkPath": "${env:JAVA_HOME}/bin",
+			"cwd": "${fileDirname}",
+			"startupClass": "${fileBasenameNoExtension}",
+			"classpath": [
+				".",
+				"${fileDirname}"
+			],
+			"externalConsole": true,
+			"stepFilters": {
+				"classNameFilters": [
+					"java.*",
+					"javax.*",
+					"sun.*",
+					"com.sun.*"
+				],
+				"skipSynthetics": true,
+				"skipStaticInitializers": true,
+				"skipConstructors": true
+			}
+		},
+		{
+			"type": "java",
+			"name": "Current File",
+			"request": "launch",
+			"mainClass": "${file}",
+			"stepFilters": {
+				"classNameFilters": [
+					"java.*",
+					"javax.*",
+					"sun.*",
+					"com.sun.*"
+				],
+				"skipSynthetics": true,
+				"skipStaticInitializers": true,
+				"skipConstructors": true
+			}
+		},
+		{
+			"type": "java",
+			"name": "ElevatorMain",
+			"request": "launch",
+			"mainClass": "ElevatorMain",
+			"projectName": "elevator_898c234a",
+			"stepFilters": {
+				"classNameFilters": [
+					"java.*",
+					"javax.*",
+					"sun.*",
+					"com.sun.*"
+				],
+				"skipSynthetics": true,
+				"skipStaticInitializers": true,
+				"skipConstructors": true
+			}
+		}
+	]
+}

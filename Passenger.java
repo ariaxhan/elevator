@@ -1,6 +1,6 @@
 import java.util.Random;
 
-public class Passenger {
+public class Passenger implements Comparable<Passenger>{
 
   public static int nextId = 1;
   public final int UP = 1;
@@ -49,6 +49,12 @@ public class Passenger {
       this.destinationFloor = 0;
     }
   }
+
+      // Implement compareTo method
+    @Override
+    public int compareTo(Passenger other) {
+        return Integer.compare(this.destinationFloor, other.destinationFloor);
+    }
 
   // getters
   public int getStartFloor() {

@@ -1,6 +1,5 @@
 import java.util.List;
 import java.util.Queue;
-import java.util.Random;
 
 public class Simulation {
 
@@ -59,7 +58,7 @@ public class Simulation {
       // load and unload passengers
       load(currentElevator, currentElevator.getCurrentFloor(), tick);
       unload(currentElevator, currentElevator.getCurrentFloor(), tick);
-      
+
     }
     toggle = !toggle;
   }
@@ -91,16 +90,13 @@ public class Simulation {
 
   public void unload(Elevator e, int currentFloor, long tick) {
     // loop through passengers in the elevator
-    for (int r = 0; r < e.getPassengerList().size(); r++) {
+    while (e.getPassengerList().peek() != null && e.getPassengerList().peek().getdestinationFloor() == currentFloor) {
       // if the passenger's destinationFloor is the current floor
       // remove the passenger from the elevator
-      Passenger currentPassenger = e.getPassengerList().get(r);
-      if (currentPassenger.getdestinationFloor() == currentFloor) {
-        e.removePassenger(currentPassenger);
-        // set end time and record passenger voyage time
-        long endTime = tick;
-        time.recordJourneyTime(currentPassenger.getStartTime(), endTime);
-      }
+      Passenger currentPassenger = e.getPassengerList().poll();
+      // set end time and record passenger voyage time
+      long endTime = tick;
+      time.recordJourneyTime(currentPassenger.getStartTime(), endTime);
     }
   }
 
@@ -121,32 +117,33 @@ public class Simulation {
     } else if (e.getCurrentFloor() == v.getFloors()) {
       e.setDown();
     }
-    // generate random floor to go to
-    Random rand = new Random();
-    if (e.getDirection() == 1) {
-      // going up
-      int minFloor = currentFloor + 1;
-      int maxFloor = v.getFloors();
-      if (minFloor + 5 < maxFloor) {
-        maxFloor = minFloor + 5;
+    int nextFloor = 0;
+    if (e.getPassengerList().peek() != null) {
+      // get next floor to go to
+      nextFloor = e.getPassengerList().peek().getdestinationFloor();
+  } else {
+    return;
+    }
+
+    // make sure it is within range of 5 and not greater or less than total number of floors
+    if (Math.abs(currentFloor - nextFloor) > 5) {
+      if (e.getDirection() == 1) {
+        nextFloor = currentFloor + 5;
+        if (nextFloor > v.getFloors()) {
+          nextFloor = v.getFloors();
+        } else if (e.getDirection() == -1) {
+          nextFloor = currentFloor - 5;
+          if (nextFloor < 1) {
+            nextFloor = 1;
+          }
+        }
       }
-      int floor = rand.nextInt((maxFloor - minFloor) + 1) + minFloor;
-      // update current floor
-      e.setCurrentFloor(floor);
+
+      e.setCurrentFloor(nextFloor);
       // update direction
-      e.setDirection(currentFloor, floor);
-    } else if (e.getDirection() == -1) {
-      // going down
-      int maxFloor = currentFloor - 1;
-      int minFloor = 1;
-      if (maxFloor - 5 > minFloor) {
-        minFloor = maxFloor - 5;
-      }
-      int floor = rand.nextInt((maxFloor - minFloor) + 1) + minFloor;
+      e.setDirection(currentFloor, nextFloor);
       // update current floor
-      e.setCurrentFloor(floor);
-      // update direction
-      e.setDirection(currentFloor, floor);
+      e.setCurrentFloor(nextFloor);
     }
   }
 }

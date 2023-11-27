@@ -1,6 +1,5 @@
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.Comparator;
+import java.util.PriorityQueue;
 
 public class Elevator {
 
@@ -12,24 +11,21 @@ public class Elevator {
   public int currentFloor;
   public int capacity;
   public variables v;
-  public List<Passenger> passengers;
+  public PriorityQueue<Passenger> upPassengers;
+  public PriorityQueue<Passenger> downPassengers;
   public int direction;
   public int id;
 
   // Constructor
   public Elevator(variables v) {
+    this.upPassengers = new PriorityQueue<>();
+    this.downPassengers = new PriorityQueue<>(Comparator.reverseOrder());
     this.v = v;
     this.capacity = 0;
     this.currentFloor = 1;
-    this.direction = UP; // Initial direction can be set to UP or STATIONARY
+    this.direction = 0; 
     this.id = nextId;
     nextId++;
-
-    if (v.getStructures().equals("linked")) {
-      this.passengers = new LinkedList<>();
-    } else {
-      this.passengers = new ArrayList<>();
-    }
   }
 
   public int getCurrentFloor() {
@@ -52,7 +48,11 @@ public class Elevator {
     if (capacity == v.getElevatorCapacity()) {
       return -1;
     }
-    passengers.add(p);
+        if (direction == UP) {
+      upPassengers.add(p);
+    } else if (direction == DOWN) {
+      downPassengers.add(p);
+    }
     capacity++;
     return 0;
   }
@@ -75,12 +75,22 @@ public class Elevator {
     direction = DOWN;
   }
 
-  public List<Passenger> getPassengerList() {
-    return passengers;
+  public PriorityQueue<Passenger> getPassengerList() {
+    if (direction == UP) {
+      return upPassengers;
+    } else {
+      return downPassengers;
+    } 
   }
 
-  public void removePassenger(Passenger p) {
-    passengers.remove(p);
+  public void removePassenger() {
+    if (direction == UP) {
+      upPassengers.poll();
+    } else if (direction == DOWN) {
+      downPassengers.poll();
+    } else {
+      System.err.println("Error, elevator not moving");
+    }
     capacity--;
   }
 }
