@@ -1,7 +1,5 @@
 # README for Elevator #
 
-Special thanks to ChatGPT and GitHub CoPilot. 
-
 ## Table of Contents ##
 + Building
 + Elevator
